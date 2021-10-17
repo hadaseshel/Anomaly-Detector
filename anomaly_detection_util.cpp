@@ -3,14 +3,73 @@
 //
 
 #include "anomaly_detection_util.h"
+#include <math.h>
 
 //**** Hail Area****
+
+// returns the average of X
+float average(float* x, int size) {
+    float sum = 0;
+    for (int i = 0; i < size; i++) {
+        sum += x[i];
+    }
+    return (sum / size);
+}
+
 // returns the variance of X and Y
-float var(float* x, int size);
+float var(float* x, int size) {
+
+    // create an array which contains the number squares of the X array
+    float newSqrArr[size];
+    for (int i = 0; i < size; i++) {
+        newSqrArr[i] = (x[i] * x[i]);
+    }
+
+    // the expected value of the squares array
+    float sqrE = average(newSqrArr, size);
+
+    // the expected value of X array
+    float E = average(x, size);
+
+    // the variance according the formula
+    float vari = (sqrE - (E * E));
+    return vari;
+}
+
 // returns the covariance of X and Y
-float cov(float* x, float* y, int size);
+float cov(float* x, float* y, int size) {
+
+    // the averages of X and Y
+    float Ex = average(x, size);
+    float Ey = average(y, size);
+
+    float newX[size];
+    float newY[size];
+    float multArr[size];
+
+    // create a new array from X and Y, minus the expected val, and insert it to the multiply array (XY).
+    for (int i = 0; i < size; i++) {
+        newX[i] = (x[i] - Ex);
+        newY[i] = (y[i] - Ey);
+        multArr[i] = (newX[i] * newY[i]);
+    }
+
+    // the covariance according the formula
+    float cova = average(multArr, size);
+    return cova;
+}
+
 // returns the Pearson correlation coefficient of X and Y
-float pearson(float* x, float* y, int size);
+float pearson(float* x, float* y, int size) {
+
+    // create variables according the formula.
+    float covXY = cov(x, y, size);
+    float varSqr1 = sqrt(var(x, size));
+    float varSqr2 = sqrt(var(y, size));
+
+    return (covXY / (varSqr1 * varSqr2));
+}
+
 
 
 //**** Hadas Area****
