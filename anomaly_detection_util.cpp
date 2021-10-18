@@ -74,8 +74,39 @@ float pearson(float* x, float* y, int size) {
 
 //**** Hadas Area****
 // performs a linear regression and return s the line equation
-Line linear_reg(Point** points, int size);
+Line linear_reg(Point** points, int size){
+    float a;
+    float b;
+
+    // create arries of float value.
+    float x_of_points [size];
+    float y_of_points [size];
+
+    // fill the arries of float value.
+    for (int i = 0; i < size; i++){
+        x_of_points[i] = points[i]->x;
+        y_of_points[i] = points[i]->y;
+    }
+
+    // use the claction that need by the orders
+    a = (cov(x_of_points, y_of_points, size) / var(x_of_points, size));
+    b = average(y_of_points, size) - (a * average(x_of_points, size));
+
+    // create the line
+    Line line = Line(a, b);
+    return line;
+}
+
 // returns the deviation between point p and the line equation of the points
-float dev(Point p,Point** points, int size);
+float dev(Point p,Point** points, int size){
+    // create a line
+    Line line = linear_reg(points, size);
+    // use the other function that now is relevent to use.
+    return dev(p,line);
+}
+
 // returns the deviation between point p and the line
-float dev(Point p,Line l);
+float dev(Point p,Line l){
+    // compute the distance between f(x) and y, and return the absulut value.
+    return std::abs((l.f(p.x)-p.y));
+}
