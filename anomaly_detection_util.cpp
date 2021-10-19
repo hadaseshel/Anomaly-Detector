@@ -13,7 +13,7 @@ float average(float* x, int size) {
     for (int i = 0; i < size; i++) {
         sum += x[i];
     }
-    return (sum / size);
+    return (sum / (float) size);
 }
 
 // returns the variance of X and Y
@@ -108,5 +108,5 @@ float dev(Point p,Point** points, int size){
 // returns the deviation between point p and the line
 float dev(Point p,Line l){
     // compute the distance between f(x) and y, and return the absulut value.
-    return std::abs((l.f(p.x)-p.y));
+    return std::fabs((l.f(p.x)-p.y));
 }
