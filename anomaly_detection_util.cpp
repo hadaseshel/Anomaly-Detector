@@ -1,6 +1,5 @@
-//
-// Created by hadseshel on 10/17/21.
-//
+// Hadas Eshel 206775074
+// Hail Zanbar 322766353
 
 #include "anomaly_detection_util.h"
 #include <math.h>
