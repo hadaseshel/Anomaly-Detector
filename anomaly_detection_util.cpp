@@ -1,5 +1,9 @@
-// Hadas Eshel 206775074
-// Hail Zanbar 322766353
+/*
+ * animaly_detection_util.cpp
+ *
+ * Author: Hadas Eshel 206775074
+ * Patner: Hail Zanbar 322766353
+ */
 
 #include "anomaly_detection_util.h"
 #include <math.h>
@@ -107,5 +111,5 @@ float dev(Point p,Point** points, int size){
 // returns the deviation between point p and the line
 float dev(Point p,Line l){
     // compute the distance between f(x) and y, and return the absulut value.
-    return std::fabs((l.f(p.x)-p.y));
+    return fabs((l.f(p.x)-p.y));
 }
