@@ -1,5 +1,9 @@
-// Hadas Eshel 206775074
-// Hail Zanbar 322766353
+/*
+ * anomaly_detection_util.cpp
+ *
+ * Author: Hail Zanbar 322766353
+ * Partner: Hadas Eshel 206775074
+ */
 
 #include "anomaly_detection_util.h"
 #include <math.h>
@@ -8,11 +12,11 @@
 
 // returns the average of X
 float average(float* x, int size) {
-    float sum = 0;
+    double sum = 0;
     for (int i = 0; i < size; i++) {
         sum += x[i];
     }
-    return (sum / (float) size);
+    return ((float) sum / (float) size);
 }
 
 // returns the variance of X and Y
@@ -63,10 +67,10 @@ float pearson(float* x, float* y, int size) {
 
     // create variables according the formula.
     float covXY = cov(x, y, size);
-    float varSqr1 = sqrt(var(x, size));
-    float varSqr2 = sqrt(var(y, size));
+    double varSqr1 = sqrt(var(x, size));
+    double varSqr2 = sqrt(var(y, size));
 
-    return (covXY / (varSqr1 * varSqr2));
+    return (covXY / (float) (varSqr1 * varSqr2));
 }
 
 
@@ -106,6 +110,11 @@ float dev(Point p,Point** points, int size){
 
 // returns the deviation between point p and the line
 float dev(Point p,Line l){
+
     // compute the distance between f(x) and y, and return the absulut value.
-    return std::fabs((l.f(p.x)-p.y));
+    float dist = l.f(p.x) - p.y;
+    if (dist < 0) {
+        dist = -dist;
+    }
+    return dist;
 }
