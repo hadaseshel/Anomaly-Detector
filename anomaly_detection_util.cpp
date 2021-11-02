@@ -1,8 +1,8 @@
 /*
- * animaly_detection_util.cpp
+ * anomaly_detection_util.cpp
  *
- * Author: Hadas Eshel 206775074
- * Patner: Hail Zanbar 322766353
+ * Author: Hail Zanbar 322766353
+ * Partner: Hadas Eshel 206775074
  */
 
 #include "anomaly_detection_util.h"
@@ -14,9 +14,9 @@
 float average(float* x, int size) {
     double sum = 0;
     for (int i = 0; i < size; i++) {
-        sum += (double)x[i];
+        sum += x[i];
     }
-    return (float)(sum / (double) size);
+    return ((float) sum / (float) size);
 }
 
 // returns the variance of X and Y
@@ -25,7 +25,7 @@ float var(float* x, int size) {
     // create an array which contains the number squares of the X array
     float newSqrArr[size];
     for (int i = 0; i < size; i++) {
-        newSqrArr[i] = (float)((double)x[i] * (double)x[i]);
+        newSqrArr[i] = (x[i] * x[i]);
     }
 
     // the expected value of the squares array
@@ -35,7 +35,7 @@ float var(float* x, int size) {
     float E = average(x, size);
 
     // the variance according the formula
-    float vari = (float)((double)sqrE - ((double)E * (double)E));
+    float vari = (sqrE - (E * E));
     return vari;
 }
 
@@ -52,9 +52,9 @@ float cov(float* x, float* y, int size) {
 
     // create a new array from X and Y, minus the expected val, and insert it to the multiply array (XY).
     for (int i = 0; i < size; i++) {
-        newX[i] = (float)((double)x[i] - (double)Ex);
-        newY[i] = (float)((double)y[i] - (double)Ey);
-        multArr[i] = (float)((double)newX[i] * (double)newY[i]);
+        newX[i] = (x[i] - Ex);
+        newY[i] = (y[i] - Ey);
+        multArr[i] = (newX[i] * newY[i]);
     }
 
     // the covariance according the formula
@@ -67,10 +67,10 @@ float pearson(float* x, float* y, int size) {
 
     // create variables according the formula.
     float covXY = cov(x, y, size);
-    float varSqr1 = sqrt(var(x, size));
-    float varSqr2 = sqrt(var(y, size));
+    double varSqr1 = sqrt(var(x, size));
+    double varSqr2 = sqrt(var(y, size));
 
-    return (float)((double)covXY / ((double)varSqr1 * (double)varSqr2));
+    return (covXY / (float) (varSqr1 * varSqr2));
 }
 
 
@@ -92,8 +92,8 @@ Line linear_reg(Point** points, int size){
     }
 
     // use the claction that need by the orders
-    a = (float)((double)cov(x_of_points, y_of_points, size) / (double) var(x_of_points, size));
-    b = (float)((double)average(y_of_points, size) - ((double)a * (double)average(x_of_points, size)));
+    a = (cov(x_of_points, y_of_points, size) / var(x_of_points, size));
+    b = average(y_of_points, size) - (a * average(x_of_points, size));
 
     // create the line
     Line line = Line(a, b);
@@ -110,6 +110,11 @@ float dev(Point p,Point** points, int size){
 
 // returns the deviation between point p and the line
 float dev(Point p,Line l){
+
     // compute the distance between f(x) and y, and return the absulut value.
-    return fabs((float)((double)(l.f(p.x)-(double)p.y)));
+    float dist = l.f(p.x) - p.y;
+    if (dist < 0) {
+        dist = -dist;
+    }
+    return dist;
 }
