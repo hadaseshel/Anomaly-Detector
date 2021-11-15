@@ -16,17 +16,22 @@ class TimeSeries{
 public:
 
     map <string, vector<float>*> *dataTable;
+    vector<string> *features;
 
+    // constructor
 	TimeSeries(const char* CSVfileName);
 
+    // destructor
+    ~TimeSeries();
+
     int getFeaturesNum();
-    vector<string>* getFeatures();
-    vector<float>* getCol(const string& feature);
-    float getVal(const string& feature,int j);
+    vector<string>* getFeatures() const;
+    vector<float>* getCol(int j);
+    float getVal(int i, int j);
 };
 
-void insertFeatures(const string line, map<string, vector<float>*> *dataTable);
-void insertValues(const string line, map<string, vector<float>*> *dataTable);
+void insertFeatures(const string line, map<string, vector<float>*> *dataTable, vector<string> *features);
+void insertValues(const string line, map<string, vector<float>*> *dataTable, vector<string> *features);
 
 
 
