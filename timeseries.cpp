@@ -33,7 +33,7 @@ TimeSeries::TimeSeries(const char *CSVfileName) {
     indata.close();
 }
 
-int TimeSeries::getFeaturesNum() {
+int TimeSeries::getFeaturesNum() const{
     return (int)(this->features)->size();
 }
 
@@ -43,7 +43,7 @@ vector<string>* TimeSeries::getFeatures() const {
 }
 
 // get the j column.
-vector<float>* TimeSeries::getCol(int j) {
+vector<float>* TimeSeries::getCol(int j) const{
 
     // We get the name of the desired column from the feature vector.
     string feature = this->features->at(j);
@@ -58,7 +58,7 @@ vector<float>* TimeSeries::getCol(int j) {
 }
 
 // get the value in the i,j index in the data table.
-float TimeSeries::getVal(int i, int j) {
+float TimeSeries::getVal(int i, int j) const{
 
     // We get the name of the desired column from the feature vector.
     string feature = this->features->at(j);

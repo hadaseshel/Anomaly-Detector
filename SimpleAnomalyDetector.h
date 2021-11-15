@@ -19,7 +19,7 @@ struct correlatedFeatures{
 
 
 class SimpleAnomalyDetector:public TimeSeriesAnomalyDetector{
-	vector<correlatedFeatures> cf;
+	vector<correlatedFeatures> *cf;
 public:
 	SimpleAnomalyDetector();
 	virtual ~SimpleAnomalyDetector();
@@ -28,7 +28,7 @@ public:
 	virtual vector<AnomalyReport> detect(const TimeSeries& ts);
 
 	vector<correlatedFeatures> getNormalModel(){
-		return cf;
+		return *cf;
 	}
 
 };

@@ -24,10 +24,10 @@ public:
     // destructor
     ~TimeSeries();
 
-    int getFeaturesNum();
+    int getFeaturesNum() const;
     vector<string>* getFeatures() const;
-    vector<float>* getCol(int j);
-    float getVal(int i, int j);
+    vector<float>* getCol(int j) const;
+    float getVal(int i, int j) const;
 };
 
 //static methods
