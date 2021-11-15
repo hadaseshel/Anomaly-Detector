@@ -30,6 +30,7 @@ public:
     float getVal(int i, int j);
 };
 
+//static methods
 void insertFeatures(const string line, map<string, vector<float>*> *dataTable, vector<string> *features);
 void insertValues(const string line, map<string, vector<float>*> *dataTable, vector<string> *features);
 

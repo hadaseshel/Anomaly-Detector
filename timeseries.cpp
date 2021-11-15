@@ -57,6 +57,7 @@ vector<float>* TimeSeries::getCol(int j) {
     return col;
 }
 
+// get the value in the i,j index in the data table.
 float TimeSeries::getVal(int i, int j) {
 
     // We get the name of the desired column from the feature vector.
