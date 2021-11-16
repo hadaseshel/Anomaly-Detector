@@ -11,27 +11,25 @@ SimpleAnomalyDetector::~SimpleAnomalyDetector() {
 }
 
 
-void SimpleAnomalyDetector::learnNormal(const TimeSeries& ts){
+void SimpleAnomalyDetector::learnNormal(const TimeSeries& ts) {
     int n = ts.getFeaturesNum();
     for (int i = 0; i < n; i++) {
         int c = -1;
-        float m = 0;
+        float m = 0.9;
         for (int j = i + 1; j < n; j++) {
-            float * colI = &ts.getCol(i)[0], *colJ = &ts.getCol(j)[0];
-            float p = pearson(colI, colJ, ts.getFeaturesNum());
+            float *colI = ts.getCol(i)->data(), *colJ = ts.getCol(j)->data();
+            float p = pearson(colI, colJ, (int) ts.getCol(i)->size());
             if (p > m) {
-                p = m;
+                m = p;
                 c = j;
             }
-            // need numbers of liens in ts
-        }
-        if (c != -1) {
-            // associate 𝑓𝑖 and 𝑓𝑗 as correlated features
+            if (c != -1) {
+                // associate 𝑓𝑖 and 𝑓𝑗 as correlated features
+            }
         }
     }
 }
 
-vector<AnomalyReport> SimpleAnomalyDetector::detect(const TimeSeries& ts){
+vector<AnomalyReport> SimpleAnomalyDetector::detect(const TimeSeries &ts) {
 
 }
-
