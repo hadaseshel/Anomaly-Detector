@@ -24,7 +24,7 @@ void SimpleAnomalyDetector::learnNormal(const TimeSeries& ts) {
                 c = j;
             }
             if (c != -1) {
-                // associate 𝑓𝑖 and 𝑓𝑗 as correlated features
+                 // associate 𝑓𝑖 and 𝑓𝑗 as correlated features
             }
         }
     }
