@@ -73,8 +73,6 @@ float pearson(float* x, float* y, int size) {
     return (covXY / (float) (varSqr1 * varSqr2));
 }
 
-
-
 //**** Hadas Area****
 // performs a linear regression and return s the line equation
 Line linear_reg(Point** points, int size){
