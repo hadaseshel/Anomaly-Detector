@@ -12,6 +12,7 @@
 
 struct correlatedFeatures{
 	string feature1,feature2;  // names of the correlated features
+    int indexFeature1, indexFeature2;
 	float corrlation;
 	Line lin_reg;
 	float threshold;

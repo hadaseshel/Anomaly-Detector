@@ -75,6 +75,21 @@ float pearson(float* x, float* y, int size) {
 
 //**** Hadas Area****
 // performs a linear regression and return s the line equation
+Line linear_reg(float* x, float* y, int size){
+    Point * point[size];
+    // fill the arries of point value.
+    for (int k = 0; k < size; k++){
+        point[k] = new Point(x[k], y[k]);
+    }
+    // performs a linear regression and return s the line equation
+    Line lin_reg = linear_reg(point, size);
+    // free the points
+    for (int d = 0; d < size; d++) {
+        delete(point[d]);
+    }
+    return lin_reg;
+}
+
 Line linear_reg(Point** points, int size){
     float a;
     float b;
@@ -115,4 +130,24 @@ float dev(Point p,Line l){
         dist = -dist;
     }
     return dist;
+}
+
+// calculation the Threshold
+float calculationThreshold (float* x, float* y, int size, Line lin_reg) {
+    Point * point[size];
+    float threshold = 0;
+    // fill the arries of point value.
+    for (int k = 0; k < size; k++){
+        point[k] = new Point(x[k], y[k]);
+    }
+    for (int p = 0; p < size; p++) {
+        float devResult = dev(*point[p], lin_reg);
+        if (devResult > threshold) {
+            threshold = devResult;
+        }
+    }
+    for (int d = 0; d < size; d++) {
+        delete(point[d]);
+    }
+    return threshold;
 }
