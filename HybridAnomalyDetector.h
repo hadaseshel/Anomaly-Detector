@@ -14,7 +14,9 @@ class HybridAnomalyDetector:public SimpleAnomalyDetector {
 public:
 	HybridAnomalyDetector();
 	virtual ~HybridAnomalyDetector();
-
+    virtual void addCorrelate(string feature1,int i, string feature2 , int c,
+                              float correlate, float *colI, float *colC, int sizeOfCol);
+    virtual void report(vector<AnomalyReport> *vectorOfReport, correlatedFeatures feature, Point point,  int line);
 };
 
 #endif /* HYBRIDANOMALYDETECTOR_H_ */
