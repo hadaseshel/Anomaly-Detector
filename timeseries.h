@@ -1,3 +1,9 @@
+/*
+ * timeseries.h
+ *
+ * Author: Hadas Eshel 206775074
+ * Partner: Hail Zanbar 322766353
+ */
 
 #ifndef TIMESERIES_H_
 #define TIMESERIES_H_

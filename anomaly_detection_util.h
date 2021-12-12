@@ -1,6 +1,9 @@
-//
-// Created by hadseshel on 10/17/21.
-//
+/*
+ * anomaly_detection_util.h
+ *
+ * Author: Hadas Eshel 206775074
+ * Partner: Hail Zanbar 322766353
+ */
 
 #ifndef EX1_ANOMALY_DETECTION_UTIL_H
 #define EX1_ANOMALY_DETECTION_UTIL_H

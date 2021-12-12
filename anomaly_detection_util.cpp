@@ -1,8 +1,8 @@
 /*
  * anomaly_detection_util.cpp
  *
- * Author: Hail Zanbar 322766353
- * Partner: Hadas Eshel 206775074
+ * Author: Hadas Eshel 206775074
+ * Partner: Hail Zanbar 322766353
  */
 
 #include "anomaly_detection_util.h"
