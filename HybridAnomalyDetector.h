@@ -15,9 +15,6 @@ public:
 	HybridAnomalyDetector();
 	virtual ~HybridAnomalyDetector();
 
-    virtual void learnNormal(const TimeSeries& ts);
-    virtual vector<AnomalyReport> detect(const TimeSeries& ts);
-
 };
 
 #endif /* HYBRIDANOMALYDETECTOR_H_ */

@@ -10,6 +10,7 @@
 
 SimpleAnomalyDetector::SimpleAnomalyDetector() {
     this->cf = new vector<correlatedFeatures>;
+    this->correlationThreshold = 0.9;
 }
 
 SimpleAnomalyDetector::~SimpleAnomalyDetector() {
@@ -22,7 +23,7 @@ void SimpleAnomalyDetector::learnNormal(const TimeSeries& ts) {
     int sizeOfCol = (int)ts.getCol(0)->size();
     for (int i = 0; i < n; i++) {
         int c = -1;
-        float m = 0.9;
+        float m = this->correlationThreshold;
         for (int j = i + 1; j < n; j++) {
             float *colI = ts.getCol(i)->data(), *colJ = ts.getCol(j)->data();
             float p = pearson(colI, colJ, sizeOfCol);
@@ -39,12 +40,7 @@ void SimpleAnomalyDetector::learnNormal(const TimeSeries& ts) {
             string feature1 = features[i], feature2 = features[c];
             float corrlation = m;
             float *colI = ts.getCol(i)->data(), *colC = ts.getCol(c)->data();
-            Line lin_reg = linear_reg(colI, colC, sizeOfCol);
-            float threshold = calculationThreshold(colI, colC, sizeOfCol, lin_reg);
-            // create the correlated.
-            correlatedFeatures corr = {feature1, feature2, i, c, corrlation, lin_reg, (float )1.1*threshold};
-            // push the correlated feateus.
-            this->cf->push_back(corr);
+            addCorrelate(feature1, i, feature2, c, corrlation, colI, colC, sizeOfCol);
         }
     }
 }
@@ -62,12 +58,7 @@ vector<AnomalyReport> SimpleAnomalyDetector::detect(const TimeSeries &ts) {
                         // go throw colum secend
                         for (int j = i+1; j < n; j++) {
                             if (j == it->indexFeature2) {
-                                float devResult = dev(Point(ts.getVal(r,i), ts.getVal(r,j)), it->lin_reg);
-                                if (devResult > it->threshold) {
-                                    string description = it->feature1 + "-" + it->feature2;
-                                    long timeStep = r + 1;
-                                    reports->push_back(AnomalyReport(description,timeStep));
-                                }
+                                report(reports,*it, Point(ts.getVal(r,i), ts.getVal(r,j)), r);
                             }
                         }
                     }
@@ -76,4 +67,25 @@ vector<AnomalyReport> SimpleAnomalyDetector::detect(const TimeSeries &ts) {
     }
     return *reports;
     delete(reports);
+}
+
+void SimpleAnomalyDetector::addCorrelate(string feature1,int i, string feature2 , int c,
+                                         float correlate, float *colI, float *colC, int sizeOfCol){
+    Line lin_reg = linear_reg(colI, colC, sizeOfCol);
+    float threshold = calculationThreshold(colI, colC, sizeOfCol, lin_reg);
+    // create the correlated.
+    correlatedFeatures corr = {feature1, feature2, i, c, correlate, lin_reg,(float )1.1*threshold
+                               ,Circle(Point(0,0),0) ,"line"};
+    // push the correlated feateus.
+    this->cf->push_back(corr);
+}
+
+void SimpleAnomalyDetector::report(vector<AnomalyReport> *vectorOfReport, correlatedFeatures feature,
+                                   Point point, int line){
+    float devResult = dev(point, feature.lin_reg);
+    if (devResult > feature.threshold) {
+        string description = feature.feature1 + "-" + feature.feature2;
+        long timeStep = line + 1;
+        vectorOfReport->push_back(AnomalyReport(description,timeStep));
+    }
 }
