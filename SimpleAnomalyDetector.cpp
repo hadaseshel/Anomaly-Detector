@@ -1,3 +1,9 @@
+/*
+ * SimpleAnomalyDetector.cpp
+ *
+ * Author: Hadas Eshel 206775074
+ * Partner: Hail Zanbar 322766353
+ */
 
 #include "SimpleAnomalyDetector.h"
 #include "anomaly_detection_util.h"
