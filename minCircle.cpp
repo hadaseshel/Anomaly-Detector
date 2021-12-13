@@ -1,3 +1,9 @@
+/*
+ * HybridAnomalyDetector.h
+ *
+ * Author: Hadas Eshel 206775074
+ * Partner: Hail Zanbar 322766353
+ */
 #include "minCircle.h"
 
 // C++ program to find the minimum enclosing

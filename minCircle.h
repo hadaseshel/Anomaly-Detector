@@ -1,4 +1,9 @@
-
+/*
+ * HybridAnomalyDetector.h
+ *
+ * Author: Hadas Eshel 206775074
+ * Partner: Hail Zanbar 322766353
+ */
 #ifndef MINCIRCLE_H_
 #define MINCIRCLE_H_
 
