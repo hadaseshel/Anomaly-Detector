@@ -58,7 +58,7 @@ vector<AnomalyReport> SimpleAnomalyDetector::detect(const TimeSeries &ts) {
                         // go throw colum secend
                         for (int j = i+1; j < n; j++) {
                             if (j == it->indexFeature2) {
-                                report(reports,*it, Point(ts.getVal(r,i), ts.getVal(r,j)), r);
+                                this->report(reports,*it, Point(ts.getVal(r,i), ts.getVal(r,j)), r);
                             }
                         }
                     }
