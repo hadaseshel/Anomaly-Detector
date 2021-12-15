@@ -17,7 +17,9 @@ using namespace std;
 
 double dist(const Point& a, const Point& b)
 {
-    return sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
+    float x = a.x - b.x;
+    float y = a.y - b.y;
+    return sqrt(x * x + y * y);
 }
 
 bool is_inside_circ(const Circle& c, const Point* p)
@@ -54,7 +56,6 @@ Circle create_circle(const Point& a, const Point& b) {
 bool is_valid_circle(const Circle& c,
                      const vector<Point*>& P)
 {
-
     for (const Point* p : P)
         if (!is_inside_circ(c, p))
             return false;
@@ -77,7 +78,6 @@ Circle min_circle_trivial(vector<Point*>& points)
 
     for (int i = 0; i < 3; i++) {
         for (int j = i + 1; j < 3; j++) {
-
             Circle c = create_circle(*(points[i]), *(points[j]));
             if (is_valid_circle(c, points))
                 return c;

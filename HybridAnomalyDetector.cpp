@@ -34,9 +34,7 @@ void HybridAnomalyDetector::report(vector<AnomalyReport> *vectorOfReport, correl
         SimpleAnomalyDetector::report(vectorOfReport, feature, point, line);
     } else {
         // distance from center of circale
-        float y = point.y-feature.minCircle.center.y;
-        float x = point.x-feature.minCircle.center.x;
-        float disResult = sqrt((y*y) + (x*x));
+        double disResult = dist(point,feature.minCircle.center);
         if (disResult > (feature.minCircle.radius*1.1)) {
             string description = feature.feature1 + "-" + feature.feature2;
             long timeStep = line + 1;
