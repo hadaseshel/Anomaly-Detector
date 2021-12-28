@@ -19,6 +19,7 @@ using namespace std;
 
 class DefaultIO{
 public:
+    string type;
 	virtual string read()=0;
 	virtual void write(string text)=0;
 	virtual void write(float f)=0;
@@ -32,15 +33,47 @@ public:
 
 // the Standard IO
 class StandardIO:public DefaultIO{
-
+public:
+    StandardIO(){ this->type="StandardIO";}
+    virtual string read();
+    virtual void write(string text);
+    virtual void write(float f)=0;
+    virtual void read(float* f)=0;
+    virtual ~StandardIO(){}
 };
+
+// ********************** function of StandardIO **********************
+string StandardIO::read() {
+    string input;
+    cin >> input;
+    return input;
+}
+
+void StandardIO::write(string text){
+    cout << text << endl;
+}
+
+// dont know why this function is needed
+void StandardIO::write(float f) {}
+
+// dont know why this function is needed
+void StandardIO::read(float *f) {}
+
 
 // the Socket IO
 class SocketIO:public DefaultIO{
-
+public:
+    SocketIO(){ this->type="SocketIO";}
+    virtual string read();
+    virtual void write(string text);
+    virtual void write(float f)=0;
+    virtual void read(float* f)=0;
+    virtual ~SocketIO(){}
 };
 // you may edit this class
 class Command{
+protected:
+    string description; // i added description
 	DefaultIO* dio;
 public:
 	Command(DefaultIO* dio):dio(dio){}
@@ -61,7 +94,7 @@ public:
 // command 2 in the menu "algorithm setting"
 class Command2: public Command{
 public:
-    Command2(DefaultIO* dio):Command(dio){}
+    Command2(DefaultIO* dio):Command(dio){this->description = "algorithm settings";}
     void execute();
     ~Command2(){}
 };
@@ -77,7 +110,7 @@ public:
 // command 4 in the menu "display results"
 class Command4: public Command{
 public:
-    Command4(DefaultIO* dio):Command(dio){}
+    Command4(DefaultIO* dio):Command(dio){this->description = "display results";}
     void execute();
     ~Command4(){}
 };
@@ -93,8 +126,14 @@ public:
 // command 6 in the menu "exit"
 class Command6: public Command{
 public:
-    Command6(DefaultIO* dio):Command(dio){}
+    Command6(DefaultIO* dio):Command(dio){ this->description = "exit";}
     void execute();
     ~Command6(){}
 };
+
+// function of exit
+void Command6::execute() {
+    exit;
+}
+
 #endif /* COMMANDS_H_ */
