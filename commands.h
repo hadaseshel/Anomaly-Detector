@@ -19,7 +19,6 @@ using namespace std;
 
 class DefaultIO{
 public:
-    string type;
 	virtual string read()=0;
 	virtual void write(string text)=0;
 	virtual void write(float f)=0;
@@ -34,7 +33,7 @@ public:
 // the Standard IO
 class StandardIO:public DefaultIO{
 public:
-    StandardIO(){ this->type="StandardIO";}
+    StandardIO(){}
     virtual string read();
     virtual void write(string text);
     virtual void write(float f)=0;
@@ -50,20 +49,22 @@ string StandardIO::read() {
 }
 
 void StandardIO::write(string text){
-    cout << text << endl;
+    cout << text;
 }
 
-// dont know why this function is needed
-void StandardIO::write(float f) {}
+void StandardIO::write(float f) {
+    cout << f;
+}
 
-// dont know why this function is needed
-void StandardIO::read(float *f) {}
+void StandardIO::read(float *f) {
+    cin >> *f;
+}
 
 
 // the Socket IO
 class SocketIO:public DefaultIO{
 public:
-    SocketIO(){ this->type="SocketIO";}
+    SocketIO(){}
     virtual string read();
     virtual void write(string text);
     virtual void write(float f)=0;
