@@ -88,39 +88,64 @@ public:
 
 // command 1 in the menu "upload a time series CVS file"
 class Command1: public Command{
+    int* stepsNum;
 public:
-    Command1(DefaultIO* dio):Command(dio){this->description = "upload a time series csv file";}
+    Command1(DefaultIO* dio, int* num):Command(dio){
+        this->description = "upload a time series csv file";
+        this->stepsNum = num;
+    }
+
     void execute() {
+
+        // will count the lines in the test csv file.
+        int testCount;
+
+        // 2 times - for the train file and the test file.
         for (int i = 0; i < 2; i++) {
+
+            // zero test counter in order to count only the test lines.
+            testCount = 0;
             ofstream file;
             if (i == 0) {
+
                 // create train file
                 ofstream file("anomalyTrain.csv");
                 dio->write("Please upload your local train CSV file.");
             } else {
+
                 // create train file
                 ofstream file("anomalyTest.csv");
                 dio->write("Please upload your local test CSV file.");
             }
-            string data = dio->read();
+            string line = dio->read();
+            while (line != "done\n") {
+                file << line << std::endl;
+                line = dio->read();
+                testCount++;
+            }
+
+            /*
+            // convert the string to a char array
             int len = data.length();
             char data_array[len + 1];
-
-            // convert the string to a char array
             strcpy(data_array, data.c_str());
 
-            stringstream sstr(data_array);
+
+            // create str stream for getline
+            stringstream sstr(data);
             string line;
             getline(sstr, line, '\n');
 
             // write the data to the file
-            while(line.compare("done") != 0) {
-                file << line << std::endl;
+            while (line.compare("done") != 0) {
+                file << line << '\n' << std::endl;
                 getline(sstr, line, '\n');
             }
+             */
             dio->write("Upload complete.");
+            file.close();
         }
-
+        *(this->stepsNum) = testCount - 1;
     }
     ~Command1(){}
 };
@@ -136,8 +161,21 @@ public:
 // command 3 in the menu "detect anomalies"
 class Command3: public Command{
 public:
-    Command3(DefaultIO* dio):Command(dio){this->description = "detect anomalies";}
-    void execute();
+    HybridAnomalyDetector *detector;
+    vector<AnomalyReport> *reportsVector;
+public:
+    Command3(DefaultIO* dio,HybridAnomalyDetector *det, vector<AnomalyReport> *reports ):Command(dio){
+            this->description = "detect anomalies";
+            this->detector = det;
+            this->reportsVector = reports;
+    }
+    void execute() {
+        TimeSeries timeSerTrain("anomalyTrain.csv");
+        this->detector->learnNormal(timeSerTrain);
+        TimeSeries timeSerTest("anomalyTest.csv");
+        *(this->reportsVector) = this->detector->detect(timeSerTest);
+        this->dio->write("anomaly detection complete.");
+    }
     ~Command3(){}
 };
 
@@ -151,8 +189,14 @@ public:
 
 // command 5 in the menu "upload anomalies and analyze results"
 class Command5: public Command{
+    vector<AnomalyReport> *reportsVector;
+    int* linesNum;
 public:
-    Command5(DefaultIO* dio):Command(dio){this->description = "upload anomalies and analyze results";}
+    Command5(DefaultIO* dio, vector<AnomalyReport> *reports, int* num):Command(dio){
+        this->description = "upload anomalies and analyze results";
+        this->reportsVector = reports;
+        this->linesNum = num;
+    }
     void execute();
     ~Command5(){}
 };

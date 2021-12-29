@@ -18,6 +18,7 @@ class CLI {
     vector<Command*>* commands;
     HybridAnomalyDetector *detector;
     vector<AnomalyReport> *reportsVector;
+    int* timeStepsNum;
     // you can add data members
 public:
 	CLI(DefaultIO* dio);
