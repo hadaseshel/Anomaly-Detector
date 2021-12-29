@@ -19,10 +19,19 @@ CLI::CLI(DefaultIO* dio) {
 }
 
 void CLI::start(){
+    this->dio->write("Welcome to the Anomaly Detection Server\n");
+    this->dio->write("Please choose an option:\n");
+    // need to print the menu by loop
 }
 
 
 CLI::~CLI() {
-
+    delete(this->dio);
+    vector<Command*>::iterator it;
+    // for each Command in the vector, delete its column vector.
+    while(!this->commands->empty()){
+        this->commands->pop_back();
+    }
+    delete(this->commands);
 }
 
