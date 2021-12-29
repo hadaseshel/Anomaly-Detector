@@ -80,6 +80,7 @@ protected:
 public:
 	Command(DefaultIO* dio):dio(dio){}
 	virtual void execute()=0;
+    string getDescription(){return this->description;}
 	virtual ~Command(){}
 };
 
@@ -159,7 +160,7 @@ public:
 // command 6 in the menu "exit"
 class Command6: public Command{
 public:
-    Command6(DefaultIO* dio):Command(dio){ this->description = "exit";}
+    Command6(DefaultIO* dio):Command(dio){this->description = "exit";}
     void execute();
     ~Command6(){}
 };

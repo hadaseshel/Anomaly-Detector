@@ -16,7 +16,9 @@ using namespace std;
 class CLI {
 	DefaultIO* dio;
     vector<Command*>* commands;
-	// you can add data members
+    HybridAnomalyDetector *detector;
+    vector<AnomalyReport> *reportsVector;
+    // you can add data members
 public:
 	CLI(DefaultIO* dio);
 	void start();
