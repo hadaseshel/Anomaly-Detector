@@ -9,6 +9,8 @@
 
 CLI::CLI(DefaultIO* dio) {
     this->commands = new vector<Command*>;
+    this->detector = new HybridAnomalyDetector();
+    this->reportsVector = new vector<AnomalyReport>;
     this->commands->push_back(new Command1(dio));
     this->commands->push_back(new Command2(dio));
     this->commands->push_back(new Command3(dio));
@@ -21,13 +23,37 @@ CLI::CLI(DefaultIO* dio) {
 void CLI::start(){
     this->dio->write("Welcome to the Anomaly Detection Server\n");
     this->dio->write("Please choose an option:\n");
-    // need to print the menu by loop
-}
 
+    int size = this->commands->size();
+    vector<Command*>::iterator it = this->commands->begin();
+    for(int i = 0; i < size; i++){
+        cout << (i+1);
+        cout << ". ";
+        cout << (*it)->getDescription();
+        it++;
+        if(i != 5){
+            cout << "\n";
+        }
+    }
+
+    // get choice from user
+    int choice;
+    cin >> choice;
+
+    // operat the wanted choice
+    it = this->commands->begin();
+    for(int i = 0; i < size; i++){
+        /*
+       if () {
+           (*it)->getDescription();
+       }
+         */
+    }
+
+}
 
 CLI::~CLI() {
     delete(this->dio);
-    vector<Command*>::iterator it;
     // for each Command in the vector, delete its column vector.
     while(!this->commands->empty()){
         this->commands->pop_back();
