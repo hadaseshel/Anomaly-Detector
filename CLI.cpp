@@ -12,9 +12,9 @@ CLI::CLI(DefaultIO* dio) {
     this->detector = new HybridAnomalyDetector();
     this->reportsVector = new vector<AnomalyReport>;
     this->commands->push_back(new Command1(dio));
-    this->commands->push_back(new Command2(dio));
+    this->commands->push_back(new Command2(dio, this->detector));
     this->commands->push_back(new Command3(dio));
-    this->commands->push_back(new Command4(dio));
+    this->commands->push_back(new Command4(dio, this->reportsVector));
     this->commands->push_back(new Command5(dio));
     this->commands->push_back(new Command6(dio));
     this->dio = dio;
@@ -28,18 +28,19 @@ void CLI::start(){
         int size = this->commands->size();
         vector<Command *>::iterator it = this->commands->begin();
         for (int i = 0; i < size; i++) {
-            cout << (i + 1);
-            cout << ". ";
-            cout << (*it)->getDescription();
+            this->dio->write((i + 1));
+            this->dio->write(". ");
+            this->dio->write((*it)->getDescription());
             it++;
             if (i != 5) {
-                cout << "\n";
+                this->dio->write("\n");
             }
         }
 
         // get choice from user
-        int choice;
-        cin >> choice;
+        float choiceInFloat;
+        this->dio->read(&choiceInFloat);
+        int choice = choiceInFloat;
 
         // operat the wanted choice
         it = this->commands->begin();
