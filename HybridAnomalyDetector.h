@@ -11,9 +11,11 @@
 #include "minCircle.h"
 
 class HybridAnomalyDetector:public SimpleAnomalyDetector {
-    float corralatonOfSimpleThreshold;
+    float correlationOfSimpleThreshold;
 public:
 	HybridAnomalyDetector();
+    float getThresholdOfCorrelationOfSimple();
+    void setThresholdOfCorrelationOfSimple(float threshold);
 	virtual ~HybridAnomalyDetector();
     virtual void addCorrelate(string feature1,int i, string feature2 , int c,
                               float correlate, float *colI, float *colC, int sizeOfCol);

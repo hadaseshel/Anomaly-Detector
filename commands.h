@@ -152,9 +152,27 @@ public:
 
 // command 2 in the menu "algorithm setting"
 class Command2: public Command{
+    HybridAnomalyDetector detector;
 public:
-    Command2(DefaultIO* dio):Command(dio){this->description = "algorithm settings";}
-    void execute();
+    Command2(DefaultIO* dio, HybridAnomalyDetector *hibridDetector):Command(dio){
+        this->description = "algorithm settings";
+        this->detector = *hibridDetector;
+    }
+    void execute(){
+        // worte the option
+        this->dio->write("The current correlation threshold is ");
+        this->dio->write(this->detector.getThresholdOfCorrelationOfSimple());
+
+        float newThreshold;
+        while(true){
+            this->dio->read(&newThreshold);
+            if ((newThreshold < 1)&&(newThreshold > 0)) {
+                this->detector.setThresholdOfCorrelationOfSimple(newThreshold);
+                break;
+            }
+            this->dio->write("please choose a value between 0 and 1.");
+        }
+    }
     ~Command2(){}
 };
 
@@ -181,9 +199,22 @@ public:
 
 // command 4 in the menu "display results"
 class Command4: public Command{
+    vector<AnomalyReport> reportInVectors;
 public:
-    Command4(DefaultIO* dio):Command(dio){this->description = "display results";}
-    void execute();
+    Command4(DefaultIO* dio, vector<AnomalyReport> *reportVectors):Command(dio){
+        this->description = "display results";
+        this->reportInVectors = *reportVectors;
+    }
+    void execute(){
+        // unupdate loop
+        vector<AnomalyReport>::iterator it;
+        for(it = this->reportInVectors.begin(); it != this->reportInVectors.end(); it++){
+            this->dio->write(it->timeStep);
+            this->dio->write("\t");
+            this->dio->write(it->timeStep);
+        }
+        this->dio->write("Done.");
+    }
     ~Command4(){}
 };
 
@@ -205,13 +236,10 @@ public:
 class Command6: public Command{
 public:
     Command6(DefaultIO* dio):Command(dio){this->description = "exit";}
-    void execute();
+    void execute(){
+        exit;
+    }
     ~Command6(){}
 };
-
-// function of exit
-void Command6::execute() {
-    exit;
-}
 
 #endif /* COMMANDS_H_ */

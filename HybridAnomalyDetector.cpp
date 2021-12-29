@@ -7,15 +7,23 @@
 #include "HybridAnomalyDetector.h"
 
 HybridAnomalyDetector::HybridAnomalyDetector() {
-    this->corralatonOfSimpleThreshold = this->correlationThreshold;
+    this->correlationOfSimpleThreshold = this->correlationThreshold;
     this->correlationThreshold = 0.5;
 }
 
 HybridAnomalyDetector::~HybridAnomalyDetector() {}
 
+void HybridAnomalyDetector::setThresholdOfCorrelationOfSimple(float threshold) {
+    this->correlationOfSimpleThreshold = threshold;
+}
+
+float HybridAnomalyDetector::getThresholdOfCorrelationOfSimple() {
+    return this->correlationOfSimpleThreshold;
+}
+
 void HybridAnomalyDetector::addCorrelate(string feature1, int i, string feature2 , int c,float correlate,
                                     float *colI, float *colC, int sizeOfCol){
-    if(correlate >= this->corralatonOfSimpleThreshold) {
+    if(correlate >= this->correlationOfSimpleThreshold) {
         SimpleAnomalyDetector::addCorrelate(feature1, i,feature2 ,c, correlate, colI, colC, sizeOfCol);
     }else{
         Line line = Line();
