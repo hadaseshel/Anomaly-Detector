@@ -13,6 +13,7 @@
 
 #include <fstream>
 #include <vector>
+#include <sstream>
 #include "HybridAnomalyDetector.h"
 
 using namespace std;
@@ -84,11 +85,42 @@ public:
 
 // implement here your command classes
 
-// command 1 in the menu "uplode a time series CVS file"
+// command 1 in the menu "upload a time series CVS file"
 class Command1: public Command{
 public:
-    Command1(DefaultIO* dio):Command(dio){}
-    void execute();
+    Command1(DefaultIO* dio):Command(dio){this->description = "upload a time series csv file";}
+    void execute() {
+        for (int i = 0; i < 2; i++) {
+            ofstream file;
+            if (i == 0) {
+                // create train file
+                ofstream file("anomalyTrain.csv");
+                dio->write("Please upload your local train CSV file.");
+            } else {
+                // create train file
+                ofstream file("anomalyTest.csv");
+                dio->write("Please upload your local test CSV file.");
+            }
+            string data = dio->read();
+            int len = data.length();
+            char data_array[len + 1];
+
+            // convert the string to a char array
+            strcpy(data_array, data.c_str());
+
+            stringstream sstr(data_array);
+            string line;
+            getline(sstr, line, '\n');
+
+            // write the data to the file
+            while(line.compare("done") != 0) {
+                file << line << std::endl;
+                getline(sstr, line, '\n');
+            }
+            dio->write("Upload complete.");
+        }
+
+    }
     ~Command1(){}
 };
 
@@ -103,7 +135,7 @@ public:
 // command 3 in the menu "detect anomalies"
 class Command3: public Command{
 public:
-    Command3(DefaultIO* dio):Command(dio){}
+    Command3(DefaultIO* dio):Command(dio){this->description = "detect anomalies";}
     void execute();
     ~Command3(){}
 };
@@ -119,7 +151,7 @@ public:
 // command 5 in the menu "upload anomalies and analyze results"
 class Command5: public Command{
 public:
-    Command5(DefaultIO* dio):Command(dio){}
+    Command5(DefaultIO* dio):Command(dio){this->description = "upload anomalies and analyze results";}
     void execute();
     ~Command5(){}
 };

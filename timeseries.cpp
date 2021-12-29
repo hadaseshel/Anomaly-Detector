@@ -1,13 +1,14 @@
 /*
  * timeseries.cpp
  *
- * Author: Hadas Eshel 206775074
- * Partner: Hail Zanbar 322766353
+ * Author: Hail Zanbar 322766353
+ * Partner: Hadas Eshel 206775074
  */
 
 #include "timeseries.h"
 #include <vector>
 #include <sstream>
+#include <fstream>
 
 
 using std::ifstream;
@@ -19,11 +20,12 @@ TimeSeries::TimeSeries(const char *CSVfileName) {
     this->dataTable = new map<string, vector<float>*>();
     this->features = new vector<string>();
     ifstream indata;
-    indata.open(CSVfileName); // opens the file
+    indata.open(CSVfileName);
     if(!indata) { // file couldn't be opened
         cerr << "Error: file could not be opened" << endl;
         exit(1);
     }
+
 
     int lines_num = 0;
     string line;

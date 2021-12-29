@@ -4,6 +4,12 @@
  * Author: Hadas Eshel 206775074
  * Partner: Hail Zanbar 322766353
  */
+/*
+ * timeseries.h
+ *
+ * Author: Hail Zanbar 322766353
+ * Partner: Hadas Eshel 206775074
+ */
 
 #ifndef TIMESERIES_H_
 #define TIMESERIES_H_

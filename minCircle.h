@@ -1,8 +1,8 @@
 /*
- * HybridAnomalyDetector.h
+ * minCircle.h
  *
- * Author: Hadas Eshel 206775074
- * Partner: Hail Zanbar 322766353
+ * Author: Hail Zanbar 322766353
+ * Partner: Hadas Eshel 206775074
  */
 #ifndef MINCIRCLE_H_
 #define MINCIRCLE_H_

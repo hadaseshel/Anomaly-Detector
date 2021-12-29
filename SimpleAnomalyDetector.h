@@ -1,8 +1,8 @@
 /*
  * SimpleAnomalyDetector.h
  *
- * Author: Hadas Eshel 206775074
- * Partner: Hail Zanbar 322766353
+ * Author: Hail Zanbar 322766353
+ * Partner: Hadas Eshel 2067750743
  */
 
 
