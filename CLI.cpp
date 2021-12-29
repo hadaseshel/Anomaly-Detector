@@ -21,35 +21,35 @@ CLI::CLI(DefaultIO* dio) {
 }
 
 void CLI::start(){
-    this->dio->write("Welcome to the Anomaly Detection Server\n");
-    this->dio->write("Please choose an option:\n");
+    while(true) {
+        this->dio->write("Welcome to the Anomaly Detection Server\n");
+        this->dio->write("Please choose an option:\n");
 
-    int size = this->commands->size();
-    vector<Command*>::iterator it = this->commands->begin();
-    for(int i = 0; i < size; i++){
-        cout << (i+1);
-        cout << ". ";
-        cout << (*it)->getDescription();
-        it++;
-        if(i != 5){
-            cout << "\n";
+        int size = this->commands->size();
+        vector<Command *>::iterator it = this->commands->begin();
+        for (int i = 0; i < size; i++) {
+            cout << (i + 1);
+            cout << ". ";
+            cout << (*it)->getDescription();
+            it++;
+            if (i != 5) {
+                cout << "\n";
+            }
+        }
+
+        // get choice from user
+        int choice;
+        cin >> choice;
+
+        // operat the wanted choice
+        it = this->commands->begin();
+        for (int i = 0; i < size; i++) {
+           if (i+1 == choice) {
+               (*it)->execute();
+           }
+           it++;
         }
     }
-
-    // get choice from user
-    int choice;
-    cin >> choice;
-
-    // operat the wanted choice
-    it = this->commands->begin();
-    for(int i = 0; i < size; i++){
-        /*
-       if () {
-           (*it)->getDescription();
-       }
-         */
-    }
-
 }
 
 CLI::~CLI() {
@@ -59,5 +59,7 @@ CLI::~CLI() {
         this->commands->pop_back();
     }
     delete(this->commands);
+    delete(this->reportsVector);
+    delete(this->detector);
 }
 
