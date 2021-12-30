@@ -27,29 +27,21 @@ void CLI::start(){
     int size = this->commands->size();
     vector<Command*>::iterator it = this->commands->begin();
     for(int i = 0; i < size; i++){
-        cout << (i+1);
-        cout << ". ";
-        cout << (*it)->getDescription();
+        this->dio->write(i+1);
+        this->dio->write(". ");
+        this->dio->write((*it)->getDescription());
         it++;
         if(i != 5){
-            cout << "\n";
+            this->dio->write("\n");
         }
     }
 
     // get choice from user
-    int choice;
-    cin >> choice;
-
-    // operat the wanted choice
-    it = this->commands->begin();
-    for(int i = 0; i < size; i++){
-        /*
-       if () {
-           (*it)->getDescription();
-       }
-         */
-    }
-
+    float choiceInF;
+    this->dio->read(&choiceInF);
+    int choice = (int)choiceInF;
+    // operate the choice
+    this->commands->data()[choice-1]->execute();
 }
 
 CLI::~CLI() {
@@ -59,5 +51,7 @@ CLI::~CLI() {
         this->commands->pop_back();
     }
     delete(this->commands);
+    delete(this->reportsVector);
+    delete(this->detector);
 }
 
