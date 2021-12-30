@@ -159,18 +159,18 @@ public:
         this->detector = *hibridDetector;
     }
     void execute(){
-        // worte the option
-        this->dio->write("The current correlation threshold is ");
-        this->dio->write(this->detector.getThresholdOfCorrelationOfSimple());
-
         float newThreshold;
         while(true){
+            // worte the option
+            this->dio->write("The current correlation threshold is ");
+            this->dio->write(this->detector.getThresholdOfCorrelationOfSimple());
+            this->dio->write("\n");
             this->dio->read(&newThreshold);
             if ((newThreshold < 1)&&(newThreshold > 0)) {
                 this->detector.setThresholdOfCorrelationOfSimple(newThreshold);
                 break;
             }
-            this->dio->write("please choose a value between 0 and 1.");
+            this->dio->write("please choose a value between 0 and 1.\n");
         }
     }
     ~Command2(){}
