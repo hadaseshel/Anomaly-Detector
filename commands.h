@@ -228,7 +228,57 @@ public:
         this->reportsVector = reports;
         this->linesNum = num;
     }
+
+    // enter the data of the reports of the client to a vector.
+    vector<pair <long, long>>* getClientsReport() {
+        vector<pair<long, long>>* repVec = new vector<pair<long, long>>;
+        char delim = ',';
+        string line = dio->read();
+        while (line != "done\n") {
+            string start, end;
+            stringstream ss(line);
+
+            // split each line to stat time and end time.
+            getline(ss, start, delim);
+            getline(ss, end, delim);
+            long s = 0, e = 0;
+
+            // convert the times from strings to ints.
+            stringstream ss1(start);
+            stringstream ss2(end);
+            ss1 >> s;
+            ss2 >> e;
+
+            pair<long, long> p = make_pair(s, e);
+            repVec->push_back(p);
+        }
+        return repVec;
+    }
+
+    vector<pair <long, long>>* getMyReport(vector<AnomalyReport> reports) {
+        vector<pair <long, long>>* myRep = new vector<pair <long, long>>;
+        int i = 0;
+        int len = reports.size();
+
+        // go over the reports in the vector and union the reports
+        // that have the same description and continuity in time.
+        while (i < len) {
+            long start = (reports.at(i)).timeStep;
+            long end = start;
+            i++;
+            while(i < len && (reports.at(i)).timeStep - 1 == (reports.at(i-1)).timeStep &&
+                        (reports.at(i)).description == (reports.at(i-1)).description) {
+                end++;
+                i++;
+            }
+            pair<long, long> p = make_pair(start, end);
+            myRep->push_back(p);
+        }
+        return myRep;
+    }
+
     void execute();
+
     ~Command5(){}
 };
 
