@@ -22,27 +22,29 @@ CLI::CLI(DefaultIO* dio) {
 }
 
 void CLI::start(){
-    this->dio->write("Welcome to the Anomaly Detection Server\n");
-    this->dio->write("Please choose an option:\n");
+    while (true) {
+        this->dio->write("Welcome to the Anomaly Detection Server\n");
+        this->dio->write("Please choose an option:\n");
 
-    int size = this->commands->size();
-    vector<Command*>::iterator it = this->commands->begin();
-    for(int i = 0; i < size; i++){
-        this->dio->write(i+1);
-        this->dio->write(". ");
-        this->dio->write((*it)->getDescription());
-        it++;
-        if(i != 5){
-            this->dio->write("\n");
+        int size = this->commands->size();
+        vector<Command *>::iterator it = this->commands->begin();
+        for (int i = 0; i < size; i++) {
+            this->dio->write(i + 1);
+            this->dio->write(". ");
+            this->dio->write((*it)->getDescription());
+            it++;
+            if (i != 5) {
+                this->dio->write("\n");
+            }
         }
-    }
 
-    // get choice from user
-    float choiceInF;
-    this->dio->read(&choiceInF);
-    int choice = (int)choiceInF;
-    // operate the choice
-    this->commands->data()[choice-1]->execute();
+        // get choice from user
+        float choiceInF;
+        this->dio->read(&choiceInF);
+        int choice = (int) choiceInF;
+        // operate the choice
+        this->commands->data()[choice - 1]->execute();
+    }
 }
 
 CLI::~CLI() {
