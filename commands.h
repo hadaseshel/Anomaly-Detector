@@ -14,6 +14,7 @@
 #include <fstream>
 #include <vector>
 #include <sstream>
+#include <iomanip>
 #include "HybridAnomalyDetector.h"
 
 using namespace std;
@@ -255,9 +256,10 @@ public:
         return repVec;
     }
 
-    vector<pair <long, long>>* getMyReport(vector<AnomalyReport> reports) {
+    vector<pair <long, long>>* getMyReport(vector<AnomalyReport>* reportsVec) {
         vector<pair <long, long>>* myRep = new vector<pair <long, long>>;
         int i = 0;
+        vector<AnomalyReport> reports = *(reportsVec);
         int len = reports.size();
 
         // go over the reports in the vector and union the reports
@@ -277,7 +279,37 @@ public:
         return myRep;
     }
 
-    void execute();
+    void execute() {
+        dio->write("Please upload your local anomalies file.");
+        vector<pair <long, long>>* clientRep = getClientsReport();
+        vector<pair <long, long>>* myRep = getMyReport(this->reportsVector);
+        long P = clientRep->size();
+        long anomalyTime = 0;
+        for (pair <long, long> time : *(clientRep)) {
+            anomalyTime += (time.second - time.first + 1);
+        }
+        long N = *(this->linesNum) - anomalyTime;
+        long TP = 0;
+        for (pair <long, long> myTime : *(myRep)) {
+            for (pair <long, long> clTime : *(clientRep)) {
+                if (clTime.first <= myTime.first && myTime.first <= clTime.second ||
+                    clTime.first <= myTime.second && myTime.second <= clTime.second ||
+                    myTime.first <= clTime.first && clTime.first <= myTime.second) {
+                    TP++;
+                }
+            }
+        }
+        long FP = myRep->size() - TP;
+        double trueRate = TP / P;
+        double falseRate = FP / N;
+        std::stringstream stream;
+        stream << std::fixed << std::setprecision(3) << trueRate;
+        std::string t = stream.str();
+        stream << std::fixed << std::setprecision(3) << falseRate;
+        std::string f = stream.str();
+        dio->write("True Positive Rate: " + t +
+                   "\nFalse Positive Rate: " + f);
+    }
 
     ~Command5(){}
 };

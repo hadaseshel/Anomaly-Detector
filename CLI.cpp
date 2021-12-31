@@ -11,6 +11,7 @@ CLI::CLI(DefaultIO* dio) {
     this->commands = new vector<Command*>;
     this->detector = new HybridAnomalyDetector();
     this->reportsVector = new vector<AnomalyReport>;
+    *(this->timeStepsNum) = 0;
     this->commands->push_back(new Command1(dio, this->timeStepsNum));
     this->commands->push_back(new Command2(dio, this->detector));
     this->commands->push_back(new Command3(dio, this->detector, this->reportsVector));
