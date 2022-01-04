@@ -112,54 +112,32 @@ public:
 
     void execute() {
 
-        // will count the lines in the test csv file.
-        int testCount;
-
-        // 2 times - for the train file and the test file.
-        for (int i = 0; i < 2; i++) {
-
-            // zero test counter in order to count only the test lines.
-            testCount = 0;
-            ofstream file;
-            if (i == 0) {
-
-                // create train file
-                ofstream file("anomalyTrain.csv");
-                dio->write("Please upload your local train CSV file.");
-            } else {
-
-                // create train file
-                ofstream file("anomalyTest.csv");
-                dio->write("Please upload your local test CSV file.");
-            }
-            string line = dio->read();
-            while (line != "done\n") {
-                file << line << std::endl;
-                line = dio->read();
-                testCount++;
-            }
-
-            /*
-            // convert the string to a char array
-            int len = data.length();
-            char data_array[len + 1];
-            strcpy(data_array, data.c_str());
-
-
-            // create str stream for getline
-            stringstream sstr(data);
-            string line;
-            getline(sstr, line, '\n');
-
-            // write the data to the file
-            while (line.compare("done") != 0) {
-                file << line << '\n' << std::endl;
-                getline(sstr, line, '\n');
-            }
-             */
-            dio->write("Upload complete.");
-            file.close();
+        // scan the train
+        ofstream file1("anomalyTrain.csv");
+        dio->write("Please upload your local test CSV file.");
+        string line1 = dio->read();
+        while (line1 != "done") {
+            file1 << line1 << std::endl;
+            line1 = dio->read();
         }
+        file1.close();
+        dio->write("Upload complete.");
+
+        // will count the lines in the test csv file.
+        int testCount = 0;
+
+        // scan the test
+        ofstream file2("anomalyTest.csv");
+        dio->write("Please upload your local test CSV file.");
+        string line2 = dio->read();
+        while (line2 != "done") {
+            file2 << line2 << std::endl;
+            line2 = dio->read();
+            testCount++;
+        }
+
+        file2.close();
+        dio->write("Upload complete.");
         *(this->stepsNum) = testCount - 1;
     }
     ~Command1(){}
@@ -249,7 +227,7 @@ public:
         vector<pair<long, long>>* repVec = new vector<pair<long, long>>;
         char delim = ',';
         string line = dio->read();
-        while (line != "done\n") {
+        while (line != "done") {
             string start, end;
             stringstream ss(line);
 
@@ -266,6 +244,7 @@ public:
 
             pair<long, long> p = make_pair(s, e);
             repVec->push_back(p);
+            line = dio->read();
         }
         return repVec;
     }
@@ -333,7 +312,7 @@ class Command6: public Command{
 public:
     Command6(DefaultIO* dio):Command(dio){this->description = "exit";}
     void execute(){
-        exit;
+        exit(0);
     }
     ~Command6(){}
 };

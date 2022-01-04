@@ -43,7 +43,10 @@ void CLI::start(){
         stringstream s(choice);
         int option = 0;
         s >> option;
-        (this->commands->at(option - 1))->execute();
+        if(option == 6) {
+            break;
+        }
+        this->commands->at(option - 1)->execute();
 
         // get choice from user
         /*
