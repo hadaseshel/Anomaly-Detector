@@ -8,17 +8,17 @@
 #include "CLI.h"
 
 CLI::CLI(DefaultIO* dio) {
+    this->dio = dio;
     this->commands = new vector<Command*>;
     this->detector = new HybridAnomalyDetector();
     this->reportsVector = new vector<AnomalyReport>;
-    *(this->timeStepsNum) = 0;
-    this->commands->push_back(new Command1(dio, this->timeStepsNum));
+    this->timeStepsNum = 0;
+    this->commands->push_back(new Command1(dio, &(this->timeStepsNum)));
     this->commands->push_back(new Command2(dio, this->detector));
     this->commands->push_back(new Command3(dio, this->detector, this->reportsVector));
     this->commands->push_back(new Command4(dio, this->reportsVector));
-    this->commands->push_back(new Command5(dio, this->reportsVector, this->timeStepsNum));
+    this->commands->push_back(new Command5(dio, this->reportsVector, &(this->timeStepsNum)));
     this->commands->push_back(new Command6(dio));
-    this->dio = dio;
 }
 
 void CLI::start(){
@@ -38,12 +38,21 @@ void CLI::start(){
             }
         }
 
+        // get choice from user by string
+        string choice = this->dio->read();
+        stringstream s(choice);
+        int option = 0;
+        s >> option;
+        (this->commands->at(option - 1))->execute();
+
         // get choice from user
+        /*
         float choiceInF;
         this->dio->read(&choiceInF);
         int choice = (int) choiceInF;
         // operate the choice
         this->commands->data()[choice - 1]->execute();
+         */
     }
 }
 

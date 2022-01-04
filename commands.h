@@ -36,14 +36,25 @@ public:
 class StandardIO:public DefaultIO{
 public:
     StandardIO(){}
-    virtual string read();
-    virtual void write(string text);
-    virtual void write(float f)=0;
-    virtual void read(float* f)=0;
+    virtual string read() {
+        string input;
+        cin >> input;
+        return input;
+    }
+    virtual void write(string text) {
+        cout << text;
+    }
+    virtual void write(float f) {
+        cout << f;
+    }
+    virtual void read(float* f) {
+        cin >> *f;
+    }
     virtual ~StandardIO(){}
 };
 
 // ********************** function of StandardIO **********************
+/*
 string StandardIO::read() {
     string input;
     cin >> input;
@@ -61,6 +72,7 @@ void StandardIO::write(float f) {
 void StandardIO::read(float *f) {
     cin >> *f;
 }
+ */
 
 
 // the Socket IO
@@ -73,6 +85,8 @@ public:
     virtual void read(float* f)=0;
     virtual ~SocketIO(){}
 };
+
+
 // you may edit this class
 class Command{
 protected:
@@ -200,16 +214,16 @@ public:
 
 // command 4 in the menu "display results"
 class Command4: public Command{
-    vector<AnomalyReport> reportInVectors;
+    vector<AnomalyReport>* reportInVectors;
 public:
     Command4(DefaultIO* dio, vector<AnomalyReport> *reportVectors):Command(dio){
         this->description = "display results";
-        this->reportInVectors = *reportVectors;
+        this->reportInVectors = reportVectors;
     }
     void execute(){
         // unupdate loop
         vector<AnomalyReport>::iterator it;
-        for(it = this->reportInVectors.begin(); it != this->reportInVectors.end(); it++){
+        for(it = this->reportInVectors->begin(); it != this->reportInVectors->end(); it++){
             this->dio->write(it->timeStep);
             this->dio->write("\t");
             this->dio->write(it->timeStep);
