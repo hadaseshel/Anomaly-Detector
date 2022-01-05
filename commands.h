@@ -65,14 +65,28 @@ class SocketIO:public DefaultIO{
 public:
     SocketIO(int socket){ this->socket = socket;}
     virtual string read(){
+        string text = "";
+    	char textInChar[1020] = {0};
+        int bufferSize = sizeof(textInChar);
+    	int readBytes = recv(this->socket, textInChar, bufferSize,0);
+    	while(readBytes == bufferSize){
+    		
+            readBytes = recv(this->socket, textInChar, bufferSize,0);
+    	}
+    	
 
     }
     virtual void write(string text){
         const char* textInChar = text.c_str();
         send(this->socket, textInChar , strlen(textInChar) , 0 );
     }
-    virtual void write(float f)=0;
-    virtual void read(float* f)=0;
+    virtual void write(float f){
+        float x = f;
+        send(this->socket, &x, sizeof x, 0);
+    }
+    virtual void read(float* f){
+        recv(this->socket, f, sizeof(*f), 0);
+    }
     virtual ~SocketIO(){}
 };
 

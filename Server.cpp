@@ -30,8 +30,13 @@ void Server::start(ClientHandler& ch)throw(const char*){
         throw "the listen failed";
     }
 
+    int new_socket = 0;
+    int addrlen = sizeof(myaddr);
     while(true){
-
+        if((new_socket = accept(this->soc , (struct sockaddr *)&myaddr, (socklen_t*)&addrlen))<0){
+        throw "the accept failed";
+    	}
+        ch.handle(new_socket);
     }
 }
 
