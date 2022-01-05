@@ -45,6 +45,7 @@ public:
         cout << text;
     }
     virtual void write(float f) {
+        //cout << std::fixed << std::setprecision(3) << f;
         cout << f;
     }
     virtual void read(float* f) {
@@ -52,27 +53,6 @@ public:
     }
     virtual ~StandardIO(){}
 };
-
-// ********************** function of StandardIO **********************
-/*
-string StandardIO::read() {
-    string input;
-    cin >> input;
-    return input;
-}
-
-void StandardIO::write(string text){
-    cout << text;
-}
-
-void StandardIO::write(float f) {
-    cout << f;
-}
-
-void StandardIO::read(float *f) {
-    cin >> *f;
-}
- */
 
 
 // the Socket IO
@@ -114,21 +94,21 @@ public:
 
         // scan the train
         ofstream file1("anomalyTrain.csv");
-        dio->write("Please upload your local test CSV file.");
+        dio->write("Please upload your local train CSV file.\n");
         string line1 = dio->read();
         while (line1 != "done") {
             file1 << line1 << std::endl;
             line1 = dio->read();
         }
         file1.close();
-        dio->write("Upload complete.");
+        dio->write("Upload complete.\n");
 
         // will count the lines in the test csv file.
         int testCount = 0;
 
         // scan the test
         ofstream file2("anomalyTest.csv");
-        dio->write("Please upload your local test CSV file.");
+        dio->write("Please upload your local test CSV file.\n");
         string line2 = dio->read();
         while (line2 != "done") {
             file2 << line2 << std::endl;
@@ -137,7 +117,7 @@ public:
         }
 
         file2.close();
-        dio->write("Upload complete.");
+        dio->write("Upload complete.\n");
         *(this->stepsNum) = testCount - 1;
     }
     ~Command1(){}
@@ -158,6 +138,7 @@ public:
             this->dio->write("The current correlation threshold is ");
             this->dio->write(this->detector.getThresholdOfCorrelationOfSimple());
             this->dio->write("\n");
+            this->dio->write("Type a new threshold\n");
             this->dio->read(&newThreshold);
             if ((newThreshold < 1)&&(newThreshold > 0)) {
                 this->detector.setThresholdOfCorrelationOfSimple(newThreshold);
@@ -185,7 +166,7 @@ public:
         this->detector->learnNormal(timeSerTrain);
         TimeSeries timeSerTest("anomalyTest.csv");
         *(this->reportsVector) = this->detector->detect(timeSerTest);
-        this->dio->write("anomaly detection complete.");
+        this->dio->write("anomaly detection complete.\n");
     }
     ~Command3(){}
 };
@@ -204,9 +185,9 @@ public:
         for(it = this->reportInVectors->begin(); it != this->reportInVectors->end(); it++){
             this->dio->write(it->timeStep);
             this->dio->write("\t");
-            this->dio->write(it->timeStep);
+            this->dio->write(it->description + "\n");
         }
-        this->dio->write("Done.");
+        this->dio->write("Done.\n");
     }
     ~Command4(){}
 };
@@ -238,8 +219,8 @@ public:
 
             // convert the times from strings to ints.
             stringstream ss1(start);
-            stringstream ss2(end);
             ss1 >> s;
+            stringstream ss2(end);
             ss2 >> e;
 
             pair<long, long> p = make_pair(s, e);
@@ -272,9 +253,38 @@ public:
         return myRep;
     }
 
+    // func to remove the zeroes at the end of the number and present 3 numbers after point
+    string fixDoublePresent(string s) {
+        int len1 = s.size();
+        int i = 0;
+        while (s[i] != '.' && i < len1) {
+            i++;
+        }
+        if (i == len1) {
+            return s;
+        }
+        if (i + 4 <= len1 - 1) {
+            s.erase(i + 4, len1);
+        }
+        int len2 = s.size();
+        i = len2 - 1;
+        while (s[i] == '0' || s[i] == '.') {
+            i--;
+            if (s[i + 1] == '.') {
+                break;
+            }
+        }
+        if (i == len2 - 1) {
+            return s;
+        }
+        s.erase(i + 1, len2);
+        return s;
+    }
+
     void execute() {
-        dio->write("Please upload your local anomalies file.");
+        dio->write("Please upload your local anomalies file.\n");
         vector<pair <long, long>>* clientRep = getClientsReport();
+        dio->write("Upload complete.\n");
         vector<pair <long, long>>* myRep = getMyReport(this->reportsVector);
         long P = clientRep->size();
         long anomalyTime = 0;
@@ -289,19 +299,31 @@ public:
                     clTime.first <= myTime.second && myTime.second <= clTime.second ||
                     myTime.first <= clTime.first && clTime.first <= myTime.second) {
                     TP++;
+                    break;
                 }
             }
         }
         long FP = myRep->size() - TP;
-        double trueRate = TP / P;
-        double falseRate = FP / N;
-        std::stringstream stream;
-        stream << std::fixed << std::setprecision(3) << trueRate;
-        std::string t = stream.str();
-        stream << std::fixed << std::setprecision(3) << falseRate;
-        std::string f = stream.str();
-        dio->write("True Positive Rate: " + t +
-                   "\nFalse Positive Rate: " + f);
+        double trueRate = (double)TP / (double)P;
+        double falseRate = (double)FP / (double)N;
+        stringstream stream1;
+        stream1 << trueRate;
+        string t = stream1.str();
+        //cout << "T before remove zero: " << t << endl;
+        t = fixDoublePresent(t);
+        stringstream stream2;
+        stream2 << falseRate;
+        string f = stream2.str();
+        //cout << "F before remove zero: " << f << endl;
+        f = fixDoublePresent(f);
+        dio->write("True Positive Rate: ");
+        dio->write(t);
+        //cout << "T: " << (float)trueRate << endl;
+        dio->write("\n");
+        dio->write("False Positive Rate: ");
+        dio->write(f);
+        //cout << "F: " << (float)falseRate << endl;
+        dio->write("\n");
     }
 
     ~Command5(){}
@@ -312,7 +334,7 @@ class Command6: public Command{
 public:
     Command6(DefaultIO* dio):Command(dio){this->description = "exit";}
     void execute(){
-        exit(0);
+        return;
     }
     ~Command6(){}
 };
