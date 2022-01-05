@@ -16,6 +16,10 @@
 #include <sstream>
 #include <iomanip>
 #include "HybridAnomalyDetector.h"
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <string.h>
+#include <stdlib.h>
 
 using namespace std;
 
@@ -57,10 +61,16 @@ public:
 
 // the Socket IO
 class SocketIO:public DefaultIO{
+    int socket;
 public:
-    SocketIO(){}
-    virtual string read();
-    virtual void write(string text);
+    SocketIO(int socket){ this->socket = socket;}
+    virtual string read(){
+
+    }
+    virtual void write(string text){
+        const char* textInChar = text.c_str();
+        send(this->socket, textInChar , strlen(textInChar) , 0 );
+    }
     virtual void write(float f)=0;
     virtual void read(float* f)=0;
     virtual ~SocketIO(){}
