@@ -11,38 +11,50 @@
 
 Server::Server(int port)throw (const char*) {
     this->port = port;
+    this->stopped = false;
 
     if((this->soc = socket(PF_INET,SOCK_STREAM,0)) == 0){
         throw "get socket failed";
     }
-}
 
-void Server::start(ClientHandler& ch)throw(const char*){
-    // to bind the server
     struct sockaddr_in myaddr;
     myaddr.sin_family = AF_INET;
     myaddr.sin_port = port;
-    if(bind(this->soc,(struct sockaddr*)&myaddr, sizeof(myaddr))<0){
+    if (bind(this->soc, (struct sockaddr *) &myaddr, sizeof(myaddr)) < 0) {
         throw "the bind failed";
     }
 
-    if(listen(this->soc, 3) < 0){
+    if (listen(this->soc, 3) < 0) {
         throw "the listen failed";
     }
+}
 
-    int new_socket = 0;
-    int addrlen = sizeof(myaddr);
-    while(true){
-        if((new_socket = accept(this->soc , (struct sockaddr *)&myaddr, (socklen_t*)&addrlen))<0){
-        throw "the accept failed";
-    	}
-        ch.handle(new_socket);
+void Server::sigHandler(int sigNum){
+    this->stopped = true;
+}
+
+void Server::start(ClientHandler& ch)throw(const char*){
+    t=new thread([&ch,this]() {
+        int new_socket = 0;
+        int addrlen = sizeof(myaddr);
+        signal(SIGALRM,sigHandler);
+        while (true) {
+            alarm(1);
+            new_socket = accept(this->soc, (struct sockaddr *) &myaddr, (socklen_t * ) & addrlen);
+            if (new_socket < 0) {
+                throw "the accept failed";
+            } else if (new_socket != 0) {
+                ch.handle(new_socket);
+                close(new_socket);
+            }
+            alarm(0);
+        }
     }
 }
 
 void Server::stop(){
 	t->join(); // do not delete this!
-
+    close(this->soc);
 }
 
 Server::~Server() {
