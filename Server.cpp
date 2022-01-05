@@ -8,8 +8,11 @@
 #include "Server.h"
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <csignal>
+#include<unistd.h>
+#include <thread>
 
-Server::Server(int port)throw (const char*) {
+Server::Server(int port)throw(const char*) {
     this->port = port;
     this->stopped = false;
 
@@ -19,7 +22,10 @@ Server::Server(int port)throw (const char*) {
 
     struct sockaddr_in myaddr;
     myaddr.sin_family = AF_INET;
-    myaddr.sin_port = port;
+    myaddr.sin_addr.s_addr = INADDR_ANY;
+    myaddr.sin_port = htons(port);
+
+    this->socketAdd = myaddr;
     if (bind(this->soc, (struct sockaddr *) &myaddr, sizeof(myaddr)) < 0) {
         throw "the bind failed";
     }
@@ -29,34 +35,33 @@ Server::Server(int port)throw (const char*) {
     }
 }
 
-void Server::sigHandler(int sigNum){
-    this->stopped = true;
+void sigHandler(int sigNum){
+    //this->stopped = true;
 }
 
 void Server::start(ClientHandler& ch)throw(const char*){
-    t=new thread([&ch,this]() {
+    this->t=new thread([&ch,this](){
         int new_socket = 0;
-        int addrlen = sizeof(myaddr);
-        signal(SIGALRM,sigHandler);
-        while (true) {
-            alarm(1);
-            new_socket = accept(this->soc, (struct sockaddr *) &myaddr, (socklen_t * ) & addrlen);
-            if (new_socket < 0) {
-                throw "the accept failed";
-            } else if (new_socket != 0) {
-                ch.handle(new_socket);
-                close(new_socket);
-            }
-            alarm(0);
+        int addrlen = sizeof(this->socketAdd);
+        //signal(SIGALRM,sigHandler);
+        //while (true) {
+        //alarm(1);
+        new_socket = accept(this->soc, (struct sockaddr *) &this->socketAdd, (socklen_t * ) & addrlen);
+        if (new_socket < 0) {
+            throw "the accept failed";
+        } else if (new_socket != 0) {
+            ch.handle(new_socket);
+            close(new_socket);
         }
-    }
+        //alarm(0);
+        //}
+    });
 }
 
 void Server::stop(){
-	t->join(); // do not delete this!
+    t->join(); // do not delete this!
     close(this->soc);
 }
 
-Server::~Server() {
-}
+Server::~Server() {}
 

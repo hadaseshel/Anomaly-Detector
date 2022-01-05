@@ -33,11 +33,6 @@ void CLI::start(){
             this->dio->write(".");
             this->dio->write((*it)->getDescription() + "\n");
             it++;
-            /*
-            if (i != 5) {
-                this->dio->write("\n");
-            }
-             */
         }
 
         // get choice from user by string
