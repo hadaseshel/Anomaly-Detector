@@ -168,14 +168,14 @@ int main(){
 		Server server(port);
 		server.start(adh); // runs on its own thread
 		// let's run 2 clients
-		//clientSide1(port,outputFile1);
+		clientSide1(port,outputFile1);
 		clientSide2(port,outputFile2);
 		server.stop(); // joins the server's thread
 	}catch(const char* s){
 		cout<<s<<endl;
 	}
-	//size_t mistakes = check(outputFile1,"expected_output_menu.txt");
-    size_t mistakes = 0;
+	size_t mistakes = check(outputFile1,"expected_output_menu.txt");
+    //size_t mistakes = 0;
 	mistakes += check(outputFile2,"expected_output.txt");
 
 	if(mistakes>0)

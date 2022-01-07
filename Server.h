@@ -80,13 +80,9 @@ public:
 class AnomalyDetectionHandler:public ClientHandler{
 public:
     virtual void handle(int clientID){
-        cout << "i in thr handler" << endl;
         SocketIO io(clientID);
-        cout << "i creat socket io" << endl;
         CLI cli(&io);
-        cout << "i creat CLI" << endl;
         cli.start();
-        cout << "i finsh the start function in CLI" << endl;
     }
 };
 

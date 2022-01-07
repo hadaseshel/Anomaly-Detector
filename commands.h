@@ -49,7 +49,6 @@ public:
         cout << text;
     }
     virtual void write(float f) {
-        //cout << std::fixed << std::setprecision(3) << f;
         cout << f;
     }
     virtual void read(float* f) {
@@ -82,16 +81,12 @@ public:
     }
 
     void execute() {
-
-        cout << "stuck in command 1" << endl;
         // scan the train
         ofstream file1("anomalyTrain.csv");
         dio->write("Please upload your local train CSV file.\n");
         string line1 = dio->read();
         while (line1 != "done\n") {
-            cout << "stuck in while loop in command 1" << endl;
-            cout << line1 << endl;
-            file1 << line1 << std::endl;
+            file1 << line1 ;
             line1 = dio->read();
         }
         file1.close();
@@ -105,8 +100,7 @@ public:
         dio->write("Please upload your local test CSV file.\n");
         string line2 = dio->read();
         while (line2 != "done\n") {
-            cout << "stuck in while loop 2 command 1" << endl;
-            file2 << line2 << std::endl;
+            file2 << line2;
             line2 = dio->read();
             testCount++;
         }
@@ -127,7 +121,6 @@ public:
         this->detector = *hibridDetector;
     }
     void execute(){
-        cout << "stuck in command 2" << endl;
         float newThreshold;
         while(true){
             // worte the option
@@ -158,15 +151,10 @@ public:
             this->reportsVector = reports;
     }
     void execute() {
-        cout << "stuck in command 3" << endl;
         TimeSeries timeSerTrain("anomalyTrain.csv");
-        cout << "1" << endl;
         this->detector->learnNormal(timeSerTrain);
-        cout << "2" << endl;
         TimeSeries timeSerTest("anomalyTest.csv");
-        cout << "3" << endl;
         *(this->reportsVector) = this->detector->detect(timeSerTest);
-        cout << "4" << endl;
         this->dio->write("anomaly detection complete.\n");
     }
     ~Command3(){}
@@ -181,7 +169,6 @@ public:
         this->reportInVectors = reportVectors;
     }
     void execute(){
-        cout << "stuck in command 4" << endl;
         // unupdate loop
         vector<AnomalyReport>::iterator it;
         for(it = this->reportInVectors->begin(); it != this->reportInVectors->end(); it++){
@@ -284,7 +271,6 @@ public:
     }
 
     void execute() {
-        cout << "stuck in command 5" << endl;
         dio->write("Please upload your local anomalies file.\n");
         vector<pair <long, long>>* clientRep = getClientsReport();
         dio->write("Upload complete.\n");
@@ -312,20 +298,16 @@ public:
         stringstream stream1;
         stream1 << trueRate;
         string t = stream1.str();
-        //cout << "T before remove zero: " << t << endl;
         t = fixDoublePresent(t);
         stringstream stream2;
         stream2 << falseRate;
         string f = stream2.str();
-        //cout << "F before remove zero: " << f << endl;
         f = fixDoublePresent(f);
         dio->write("True Positive Rate: ");
         dio->write(t);
-        //cout << "T: " << (float)trueRate << endl;
         dio->write("\n");
         dio->write("False Positive Rate: ");
         dio->write(f);
-        //cout << "F: " << (float)falseRate << endl;
         dio->write("\n");
     }
 
