@@ -77,7 +77,7 @@ class Server {
     int soc;
     volatile bool stopped;
     struct sockaddr_in socketAdd;
-    // you may add data members
+    //  you may add data members
 
 public:
     Server(int port)throw(const char*);
