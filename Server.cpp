@@ -36,16 +36,16 @@ Server::Server(int port)throw(const char*) {
 }
 
 void sigHandler(int sigNum){
-    //this->stopped = true;
+    cout << "sidH" << endl;
 }
 
 void Server::start(ClientHandler& ch)throw(const char*){
     this->t = new thread([&ch,this](){
         int new_socket = 0;
         int addrlen = sizeof(this->socketAdd);
-        //signal(SIGALRM,sigHandler);
-        //while (!stopped) {
-            //alarm(1);
+        signal(SIGALRM,sigHandler);
+        while (!stopped) {
+            alarm(1);
             new_socket = accept(this->soc, (struct sockaddr *) &this->socketAdd, (socklen_t * ) & addrlen);
             if (new_socket < 0) {
                 throw "the accept failed";
@@ -53,14 +53,16 @@ void Server::start(ClientHandler& ch)throw(const char*){
                 ch.handle(new_socket);
                 close(new_socket);
             }
-        //alarm(0);
-        //}
+            alarm(0);
+        }
+        close(this->soc);
     });
 }
 
 void Server::stop(){
+    this->stopped = true;
     t->join(); // do not delete this!
-    close(this->soc);
+    //cout << "finish stop" << endl;
 }
 
 Server::~Server() {}
