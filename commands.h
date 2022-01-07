@@ -83,11 +83,14 @@ public:
 
     void execute() {
 
+        cout << "stuck in command 1" << endl;
         // scan the train
         ofstream file1("anomalyTrain.csv");
         dio->write("Please upload your local train CSV file.\n");
         string line1 = dio->read();
-        while (line1 != "done") {
+        while (line1 != "done\n") {
+            cout << "stuck in while loop in command 1" << endl;
+            cout << line1 << endl;
             file1 << line1 << std::endl;
             line1 = dio->read();
         }
@@ -101,7 +104,8 @@ public:
         ofstream file2("anomalyTest.csv");
         dio->write("Please upload your local test CSV file.\n");
         string line2 = dio->read();
-        while (line2 != "done") {
+        while (line2 != "done\n") {
+            cout << "stuck in while loop 2 command 1" << endl;
             file2 << line2 << std::endl;
             line2 = dio->read();
             testCount++;
@@ -123,6 +127,7 @@ public:
         this->detector = *hibridDetector;
     }
     void execute(){
+        cout << "stuck in command 2" << endl;
         float newThreshold;
         while(true){
             // worte the option
@@ -153,10 +158,15 @@ public:
             this->reportsVector = reports;
     }
     void execute() {
+        cout << "stuck in command 3" << endl;
         TimeSeries timeSerTrain("anomalyTrain.csv");
+        cout << "1" << endl;
         this->detector->learnNormal(timeSerTrain);
+        cout << "2" << endl;
         TimeSeries timeSerTest("anomalyTest.csv");
+        cout << "3" << endl;
         *(this->reportsVector) = this->detector->detect(timeSerTest);
+        cout << "4" << endl;
         this->dio->write("anomaly detection complete.\n");
     }
     ~Command3(){}
@@ -171,6 +181,7 @@ public:
         this->reportInVectors = reportVectors;
     }
     void execute(){
+        cout << "stuck in command 4" << endl;
         // unupdate loop
         vector<AnomalyReport>::iterator it;
         for(it = this->reportInVectors->begin(); it != this->reportInVectors->end(); it++){
@@ -199,7 +210,7 @@ public:
         vector<pair<long, long>>* repVec = new vector<pair<long, long>>;
         char delim = ',';
         string line = dio->read();
-        while (line != "done") {
+        while (line != "done\n") {
             string start, end;
             stringstream ss(line);
 
@@ -273,6 +284,7 @@ public:
     }
 
     void execute() {
+        cout << "stuck in command 5" << endl;
         dio->write("Please upload your local anomalies file.\n");
         vector<pair <long, long>>* clientRep = getClientsReport();
         dio->write("Upload complete.\n");

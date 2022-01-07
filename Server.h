@@ -21,7 +21,7 @@ class SocketIO:public DefaultIO{
     int socket;
 public:
     SocketIO(int socket){ this->socket = socket;}
-    string readLine(){
+    virtual string read(){
         char c=0;
         size_t i=0;
         string s="";
@@ -31,6 +31,8 @@ public:
         }
         return s;
     }
+
+    /*
     virtual string read(){
         string text = "";
         char textInChar[1020] = {0};
@@ -45,19 +47,24 @@ public:
         }
         return text;
     }
+     */
+
     virtual void write(string text){
         const char* textInChar = text.c_str();
         send(this->socket, textInChar , strlen(textInChar) , 0 );
     }
+
     virtual void write(float f){
         ostringstream ss;
         ss <<f;
         string s(ss.str());
         write(s);
     }
+
     virtual void read(float* f){
         recv(this->socket, f, sizeof(*f), 0);
     }
+
     virtual ~SocketIO(){}
 };
 

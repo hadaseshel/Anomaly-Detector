@@ -40,19 +40,19 @@ void sigHandler(int sigNum){
 }
 
 void Server::start(ClientHandler& ch)throw(const char*){
-    this->t=new thread([&ch,this](){
+    this->t = new thread([&ch,this](){
         int new_socket = 0;
         int addrlen = sizeof(this->socketAdd);
         //signal(SIGALRM,sigHandler);
-        //while (true) {
-        //alarm(1);
-        new_socket = accept(this->soc, (struct sockaddr *) &this->socketAdd, (socklen_t * ) & addrlen);
-        if (new_socket < 0) {
-            throw "the accept failed";
-        } else if (new_socket != 0) {
-            ch.handle(new_socket);
-            close(new_socket);
-        }
+        //while (!stopped) {
+            //alarm(1);
+            new_socket = accept(this->soc, (struct sockaddr *) &this->socketAdd, (socklen_t * ) & addrlen);
+            if (new_socket < 0) {
+                throw "the accept failed";
+            } else if (new_socket != 0) {
+                ch.handle(new_socket);
+                close(new_socket);
+            }
         //alarm(0);
         //}
     });
