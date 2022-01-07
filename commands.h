@@ -321,7 +321,7 @@ public:
     void execute(){
         return;
     }
-    ~Command6(){}
+    ~Command6() {}
 };
 
 #endif /* COMMANDS_H_ */

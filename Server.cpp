@@ -43,17 +43,30 @@ void Server::start(ClientHandler& ch)throw(const char*){
     this->t = new thread([&ch,this](){
         int new_socket = 0 ;
         int addrlen = sizeof(this->socketAdd);
-        signal(SIGALRM,sigHandler);
+
+        int iResult;
+        struct timeval tv;
+        fd_set rfds;
+        FD_ZERO(&rfds);
+        FD_SET(this->soc, &rfds);
+
+        tv.tv_sec = (long)2;
+        tv.tv_usec = 0;
+
+        //signal(SIGALRM,SIG_DFL);
         while (!stopped) {
-            alarm(1);
-            new_socket = accept(this->soc, (struct sockaddr *) &this->socketAdd, (socklen_t * ) & addrlen);
+            //alarm(1);
+            iResult = select(this->soc + 1, &rfds, (fd_set *) 0, (fd_set *) 0, &tv);
+            if (iResult) {
+                new_socket = accept(this->soc, (struct sockaddr *) &this->socketAdd, (socklen_t * ) & addrlen);
+            }
             if (new_socket < 0) {
                 throw "the accept failed";
             } else if (new_socket != 0) {
                 ch.handle(new_socket);
                 close(new_socket);
             }
-            alarm(0);
+            //alarm(0);
         }
         close(this->soc);
     });

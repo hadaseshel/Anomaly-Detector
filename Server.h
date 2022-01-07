@@ -32,22 +32,6 @@ public:
         return s;
     }
 
-    /*
-    virtual string read(){
-        string text = "";
-        char textInChar[1020] = {0};
-        int bufferSize = sizeof(textInChar);
-        int readBytes = recv(this->socket, textInChar, bufferSize,0);
-        text = text + textInChar;
-        while(readBytes == bufferSize){
-            readBytes = recv(this->socket, textInChar, bufferSize,0);
-            if(readBytes > 0) {
-                text = text + textInChar;
-            }
-        }
-        return text;
-    }
-     */
 
     virtual void write(string text){
         const char* textInChar = text.c_str();
