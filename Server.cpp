@@ -41,7 +41,7 @@ void sigHandler(int sigNum){
 
 void Server::start(ClientHandler& ch)throw(const char*){
     this->t = new thread([&ch,this](){
-        int new_socket = 0;
+        int new_socket = 0 ;
         int addrlen = sizeof(this->socketAdd);
         signal(SIGALRM,sigHandler);
         while (!stopped) {
